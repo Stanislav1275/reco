@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  recommender:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recommender_service
+    ports:
+      - "${GRPC_PORT}:${GRPC_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - mongodb
+      - redis
+      - external_db
+    networks:
+      - recommender_network
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "${MONGODB_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+    volumes:
+      - mongodb_data:/data/db
+      - ../mongo-init:/docker-entrypoint-initdb.d
+    networks:
+      - recommender_network
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    networks:
+      - recommender_network
+
+  external_db:
+    image: mysql:8.0
+    ports:
+      - "${EXTERNAL_DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${EXTERNAL_DB_PASSWORD}
+      MYSQL_DATABASE: ${EXTERNAL_DB_NAME}
+      MYSQL_USER: ${EXTERNAL_DB_USER}
+      MYSQL_PASSWORD: ${EXTERNAL_DB_PASSWORD}
+    volumes:
+      - external_db_data:/var/lib/mysql
+
+volumes:
+  mongodb_data:
+  redis_data:
+  external_db_data:
+
+networks:
+  recommender_network:
+    driver: bridge 

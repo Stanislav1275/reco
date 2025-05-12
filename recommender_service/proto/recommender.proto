@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package recommender;
+
+service RecommenderService {
+  // Получение рекомендаций для пользователя
+  rpc GetRecommendations(RecommendationRequest) returns (RecommendationResponse) {}
+  
+  // Обучение модели
+  rpc TrainModel(TrainRequest) returns (TrainResponse) {}
+  
+  // Получение конфигураций
+  rpc GetConfigs(ConfigRequest) returns (ConfigResponse) {}
+  
+  // Получение метрик модели
+  rpc GetModelMetrics(MetricsRequest) returns (MetricsResponse) {}
+}
+
+message RecommendationRequest {
+  int32 user_id = 1;
+  string config_id = 2;
+  int32 limit = 3;
+  bool filter_viewed = 4;
+}
+
+message RecommendationResponse {
+  repeated RecommendationItem items = 1;
+}
+
+message RecommendationItem {
+  int32 title_id = 1;
+  float score = 2;
+}
+
+message TrainRequest {
+  string config_id = 1;
+  bool force = 2;
+}
+
+message TrainResponse {
+  string status = 1;
+  string message = 2;
+  string model_version = 3;
+}
+
+message ConfigRequest {
+  repeated int32 site_ids = 1;
+  bool active_only = 2;
+}
+
+message ConfigResponse {
+  repeated ModelConfig configs = 1;
+}
+
+message ModelConfig {
+  string config_id = 1;
+  repeated int32 site_ids = 2;
+  string name = 3;
+  string description = 4;
+  string train_schedule = 5;
+  map<string, string> model_params = 6;
+  repeated FilterCondition filters = 7;
+  string last_train_time = 8;
+  string active_model_version = 9;
+  bool is_active = 10;
+}
+
+message FilterCondition {
+  string field = 1;
+  string operator = 2;
+  string value = 3;
+  string description = 4;
+}
+
+message MetricsRequest {
+  string config_id = 1;
+  string model_version = 2;
+}
+
+message MetricsResponse {
+  map<string, float> metrics = 1;
+  string model_version = 2;
+  string timestamp = 3;
+}

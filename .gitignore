@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Данные
+data/
+*.pkl
+*.pickle
+*.csv
+*.json
+*.parquet
+*.db
+*.sqlite3
+
+# Логи
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Тесты
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Временные файлы
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+config.local.py
+settings.local.py 
