@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  external_db:
+    image: mysql:8.0
+    container_name: recommender_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: external_pass
+      MYSQL_DATABASE: external_db
+      MYSQL_USER: external_user
+      MYSQL_PASSWORD: external_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data: 
