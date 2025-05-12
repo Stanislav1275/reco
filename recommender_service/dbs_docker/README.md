@@ -68,19 +68,29 @@ EXTERNAL_DB_PASSWORD=external_pass
 
 ## Запуск приложения
 
-1. Создайте и активируйте виртуальное окружение:
+1. Убедитесь, что у вас установлен Python 3.11:
+```bash
+python --version  # Должно показать Python 3.11.x
+```
+
+2. Создайте и активируйте виртуальное окружение:
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # для Linux/Mac
 .venv\Scripts\activate     # для Windows
 ```
 
-2. Установите зависимости:
+3. Обновите pip до последней версии:
+```bash
+python -m pip install --upgrade pip
+```
+
+4. Установите зависимости:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Запустите приложение:
+5. Запустите приложение:
 ```bash
 python -m recommender_service.main
 ``` 

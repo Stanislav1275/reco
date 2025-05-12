@@ -1,31 +1,29 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
 # Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
+    build-essential \
     pkg-config \
     default-libmysqlclient-dev \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Обновление pip
-RUN pip install --no-cache-dir --upgrade pip
+# Копирование файлов зависимостей
+COPY requirements.txt .
 
 # Установка зависимостей Python
-COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копирование исходного кода и конфигурации
+# Копирование исходного кода
 COPY . .
 
-# Создание пользователя и директорий
-RUN useradd -m recommender && \
-    mkdir -p /app/data && \
-    mkdir -p /app/data/datasets && \
-    chown -R recommender:recommender /app
+# Создание пользователя
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
 
-USER recommender
+# Создание необходимых директорий
+RUN mkdir -p /app/data/datasets
 
-# Запуск сервиса
+# Запуск приложения
 CMD ["python", "-m", "recommender_service.main"] 
